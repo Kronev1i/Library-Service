@@ -1,5 +1,7 @@
-from django.utils.dateparse import parse_date
-from rest_framework import mixins, viewsets, permissions
+from django.utils import timezone
+from rest_framework import mixins, viewsets, permissions, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from borrowings.models import Borrowing
 from borrowings.serializers import (
@@ -43,3 +45,23 @@ class BorrowingViewSet(
         if self.action == "create":
             return BorrowingCreateSerializer
         return BorrowingDetailSerializer
+
+    @action(methods=["POST"], detail=True, url_path="return")
+    def return_borrowing(self, request, pk=None):
+        borrowing = self.get_object()
+
+        if borrowing.actual_return_date is not None:
+            return Response(
+                {"detail": "This borrowing has already been returned."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        borrowing.actual_return_date = timezone.now().date()
+        borrowing.save()
+
+        book = borrowing.book
+        book.inventory += 1
+        book.save()
+
+        serializer = self.get_serializer(borrowing)
+        return Response(serializer.data)
