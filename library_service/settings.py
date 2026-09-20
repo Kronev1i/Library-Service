@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     "rest_framework",
     "books",
     "users",
-    "borrowings"
+    "borrowings",
+    "django_q",
+    "notifications"
 ]
 
 MIDDLEWARE = [
@@ -156,5 +158,19 @@ SIMPLE_JWT = {
 MAILERS = {
     "default": {
         "BACKEND": "django.core.mail.backends.console.EmailBackend",
+    },
+}
+
+Q_CLUSTER = {
+    "name": "library_service",
+    "workers": 2,
+    "timeout": 90,
+    "retry": 120,
+    "queue_limit": 50,
+    "bulk": 10,
+    "redis": {
+        "host": os.environ.get("REDIS_HOST", "redis"),
+        "port": int(os.environ.get("REDIS_PORT", 6379)),
+        "db": 0,
     },
 }
