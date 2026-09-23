@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     "users",
     "borrowings",
     "django_q",
-    "notifications"
+    "notifications",
+    "drf_spectacular"
 ]
 
 MIDDLEWARE = [
@@ -143,6 +144,14 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Library Service API",
+    "DESCRIPTION": "API for managing library book borrowings, users, and notifications.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 SIMPLE_JWT = {
