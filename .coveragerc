@@ -1,0 +1,12 @@
+[run]
+source = books,users,borrowings,notifications
+omit =
+    */migrations/*
+    */tests.py
+    */admin.py
+    */apps.py
+    manage.py
+    library_service/*
+
+[report]
+skip_empty = True
